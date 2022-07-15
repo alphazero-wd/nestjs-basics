@@ -1,27 +1,32 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  ClassSerializerInterceptor,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
   UseGuards,
-  Res,
+  UseInterceptors,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards';
+import { RequestWithUser } from '../auth/interfaces';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
+@UseInterceptors(ClassSerializerInterceptor)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  create(@Body() createPostDto: CreatePostDto, @Req() req: RequestWithUser) {
+    return this.postsService.create(createPostDto, req.user);
   }
 
   @Get()
@@ -30,20 +35,23 @@ export class PostsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.postsService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('update/:id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postsService.update(id, updatePostDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
-  async remove(@Param('id') id: string, @Res() res: Response) {
-    await this.postsService.remove(+id);
-    return res.sendStatus(200);
+  async remove(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    await this.postsService.remove(id);
+    req.res.sendStatus(200);
   }
 }

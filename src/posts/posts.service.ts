@@ -1,35 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Injectable,
+  UseInterceptors,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../users/entities/user.entity';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { Post } from './entities/post.entity';
 import { PostNotFoundException } from './exceptions/post-not-found.exception';
 
 @Injectable()
+@UseInterceptors(ClassSerializerInterceptor)
 export class PostsService {
   constructor(
     @InjectRepository(Post)
     private postsRepository: Repository<Post>,
   ) {}
-  async create(createPostDto: CreatePostDto) {
-    const newPost = this.postsRepository.create(createPostDto);
+  async create(createPostDto: CreatePostDto, author: User) {
+    const newPost = this.postsRepository.create({
+      ...createPostDto,
+      author,
+    });
     await this.postsRepository.save(newPost);
     return newPost;
   }
 
   findAll() {
-    return this.postsRepository.find();
+    // return posts and authors
+    return this.postsRepository.find({ relations: ['author', 'categories'] });
   }
 
   async findOne(id: number) {
-    const post = await this.postsRepository.findOne({ where: { id } });
+    const post = await this.postsRepository.findOne({
+      where: { id },
+      relations: ['author', 'categories'],
+    });
     if (post) return post;
     throw new PostNotFoundException(post.id);
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
     await this.postsRepository.update(id, updatePostDto);
-    const post = await this.postsRepository.findOne({ where: { id } });
+    const post = await this.postsRepository.findOne({
+      where: { id },
+      relations: ['author', 'categories'],
+    });
     if (post) return post;
     throw new PostNotFoundException(post.id);
   }
