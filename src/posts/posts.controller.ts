@@ -7,7 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../auth/guards';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { PostsService } from './posts.service';
@@ -40,7 +42,8 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+  async remove(@Param('id') id: string, @Res() res: Response) {
+    await this.postsService.remove(+id);
+    return res.sendStatus(200);
   }
 }
