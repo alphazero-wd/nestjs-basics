@@ -8,6 +8,9 @@ export class Post {
   @Column()
   title: string;
 
+  @Column()
+  content: string;
+
   @Column({ nullable: true })
-  content: string | null;
+  category: string;
 }
