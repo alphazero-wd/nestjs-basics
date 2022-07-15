@@ -1,5 +1,4 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { Address } from '../entities/address.entity';
 
 export class CreateUserDto {
   @IsEmail()
@@ -14,6 +13,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(7)
   password: string;
-
-  address: Address;
 }

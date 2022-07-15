@@ -6,20 +6,16 @@ import {
   HttpCode,
   Post,
   Req,
-  SerializeOptions,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard, JwtAuthGuard } from './guards';
+import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { RequestWithUser } from './interfaces/request.interface';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
-@SerializeOptions({
-  strategy: 'exposeAll',
-})
 export class AuthController {
   constructor(private authService: AuthService) {}
 

@@ -1,11 +1,4 @@
-import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Length,
-  ValidateNested,
-} from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreatePostDto {
   @Length(1, 64)
@@ -16,8 +9,4 @@ export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
   content: string;
-
-  @IsArray()
-  @IsOptional()
-  categorieIds: number[];
 }

@@ -13,7 +13,6 @@ export class UsersService {
   async getByEmail(email: string) {
     const user = await this.usersRepository.findOne({
       where: { email },
-      relations: ['address', 'posts'],
     });
     if (user) return user;
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -28,7 +27,6 @@ export class UsersService {
   async getById(id: number) {
     const user = await this.usersRepository.findOne({
       where: { id },
-      relations: ['address', 'posts'],
     });
     if (user) return user;
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);

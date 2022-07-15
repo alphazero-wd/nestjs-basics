@@ -25,14 +25,14 @@ export class User {
   @Exclude()
   password: string;
 
-  @OneToOne(() => Address, (address: Address) => address.user, {
+  @OneToOne(() => Address, {
     eager: true,
     cascade: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  address: Address;
+  address?: Address;
 
   @OneToMany(() => Post, (post: Post) => post.author, { onDelete: 'CASCADE' })
-  posts: Post[];
+  posts?: Post[];
 }
