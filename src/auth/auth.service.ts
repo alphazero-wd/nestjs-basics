@@ -60,15 +60,33 @@ export class AuthService {
       );
   }
 
-  getCookieWithJwtToken(sub: number) {
+  getCookieWithAccessToken(sub: number) {
     const payload: TokenPayload = { sub };
-    const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      'JWT_EXPIRATION_TIME',
-    )}`;
+    const expiresIn = this.configService.get('JWT_ACCESS_EXPIRATION_TIME');
+    const secret = this.configService.get('JWT_ACCESS_SECRET');
+    const token = this.jwtService.sign(payload, {
+      secret,
+      expiresIn: expiresIn + 's',
+    });
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn}`;
+  }
+
+  getCookieWithRefreshToken(sub: number) {
+    const payload: TokenPayload = { sub };
+    const expiresIn = this.configService.get('JWT_REFRESH_EXPIRATION_TIME');
+    const secret = this.configService.get('JWT_REFRESH_SECRET');
+    const token = this.jwtService.sign(payload, {
+      secret,
+      expiresIn: expiresIn + 's',
+    });
+    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${expiresIn}`;
+    return { token, cookie };
   }
 
   getCookieForLogout() {
-    return 'Authentication=; HttpOnly; Path=/; Max-Age=0';
+    return [
+      'Authentication=; HttpOnly; Path=/; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; Max-Age=0',
+    ];
   }
 }
