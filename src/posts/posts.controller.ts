@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
   UseInterceptors,
@@ -16,6 +17,7 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards';
 import { RequestWithUser } from '../auth/interfaces';
 import { CreatePostDto, UpdatePostDto } from './dto';
+import { PaginationParams } from './params';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
@@ -30,8 +32,8 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Query() { offset, limit }: PaginationParams) {
+    return this.postsService.findAll(limit, offset);
   }
 
   @Get(':id')
