@@ -9,4 +9,8 @@ export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
   content: string;
+
+  @IsString({ each: true })
+  @IsNotEmpty()
+  paragraphs: string[];
 }

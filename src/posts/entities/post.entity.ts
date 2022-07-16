@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -17,13 +18,14 @@ export class Post {
   @Column()
   title: string;
 
-  @Column()
-  content: string;
-
+  @Index('post_authorId_index')
   @ManyToOne(() => User, (author: User) => author.posts, {
     onDelete: 'CASCADE',
   })
   author: User;
+
+  @Column('text', { array: true })
+  paragraphs: string[];
 
   @ManyToMany(() => Category, (category: Category) => category.posts)
   @JoinTable()
