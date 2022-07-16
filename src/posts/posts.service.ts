@@ -4,7 +4,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, MoreThan, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { Post } from './entities/post.entity';
@@ -26,9 +26,22 @@ export class PostsService {
     return newPost;
   }
 
-  findAll() {
+  async findAll(limit?: number, offset?: number, startId?: number) {
     // return posts and authors
-    return this.postsRepository.find({ relations: ['author', 'categories'] });
+    const where: FindManyOptions<Post>['where'] = {};
+    let separateCount = 0;
+    if (startId) {
+      where.id = MoreThan(startId);
+      separateCount = await this.postsRepository.count();
+    }
+    const [items, count] = await this.postsRepository.findAndCount({
+      relations: ['author'],
+      order: { id: 'ASC' },
+      skip: offset,
+      take: limit,
+    });
+
+    return { items, count: startId ? separateCount : count };
   }
 
   async findOne(id: number) {
