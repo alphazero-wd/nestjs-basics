@@ -7,6 +7,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Comment } from '../../comments/entities/comment.entity';
 import { Post } from '../../posts/entities/post.entity';
 import { Address } from './address.entity';
 
@@ -41,4 +42,9 @@ export class User {
 
   @OneToMany(() => Post, (post: Post) => post.author, { onDelete: 'CASCADE' })
   posts?: Post[];
+
+  @OneToMany(() => Comment, (comment: Comment) => comment.id, {
+    onDelete: 'CASCADE',
+  })
+  comments?: Comment[];
 }
