@@ -24,6 +24,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
         SUBSCRIBERS_SERVICE_PORT: Joi.string().required(),
         RABBITMQ_USER: Joi.string().required(),
         RABBITMQ_PASSWORD: Joi.string().required(),
+        GRPC_CONNECTION_URL: Joi.string().required(),
       }),
     }),
     DatabaseModule,
