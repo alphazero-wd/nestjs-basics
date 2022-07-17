@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { SubscribersService } from './subscribers.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 
@@ -8,7 +8,7 @@ export class SubscribersController {
   constructor(private readonly subscribersService: SubscribersService) {}
 
   // use EventPattern in order not to wait for a response
-  @EventPattern('create-subscriber')
+  @MessagePattern('create-subscriber')
   create(@Payload() createSubscriberDto: CreateSubscriberDto) {
     return this.subscribersService.create(createSubscriberDto);
   }

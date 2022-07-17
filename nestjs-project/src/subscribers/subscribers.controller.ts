@@ -31,7 +31,7 @@ export class SubscribersController {
     // use emit with EventPattern
     // even though, it is more performant but we don't know if a subscriber is added successfully
     // therefore, we don't receive subscriber details
-    return this.subscribersService.emit(
+    return this.subscribersService.send(
       'create-subscriber',
       createSubscriberDto,
     );
