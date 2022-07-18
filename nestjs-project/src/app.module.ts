@@ -10,8 +10,11 @@ import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { CommentsModule } from './comments/comments.module';
+import { EmailModule } from './email/email.module';
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     PostsModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -26,6 +29,11 @@ import { CommentsModule } from './comments/comments.module';
         RABBITMQ_USER: Joi.string().required(),
         RABBITMQ_PASSWORD: Joi.string().required(),
         GRPC_CONNECTION_URL: Joi.string().required(),
+        REDIS_HOST: Joi.number().required(),
+        REDIS_PORT: Joi.string().required(),
+        EMAIL_SERVICE: Joi.string().required(),
+        EMAIL_USER: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -34,6 +42,7 @@ import { CommentsModule } from './comments/comments.module';
     CategoriesModule,
     SubscribersModule,
     CommentsModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
