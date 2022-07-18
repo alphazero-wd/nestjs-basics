@@ -32,8 +32,8 @@ export class PostsController {
   }
 
   @Get()
-  findAll(@Query() { offset, limit }: PaginationParams) {
-    return this.postsService.findAll(limit, offset);
+  findAll(@Query() { offset, limit, startId }: PaginationParams) {
+    return this.postsService.findAll(limit, offset, startId);
   }
 
   @Get(':id')
