@@ -12,6 +12,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
 import { CommentsModule } from './comments/comments.module';
 import { EmailModule } from './email/email.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ChatModule } from './chat/chat.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -29,8 +30,8 @@ import { ScheduleModule } from '@nestjs/schedule';
         RABBITMQ_USER: Joi.string().required(),
         RABBITMQ_PASSWORD: Joi.string().required(),
         GRPC_CONNECTION_URL: Joi.string().required(),
-        REDIS_HOST: Joi.number().required(),
-        REDIS_PORT: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
         EMAIL_SERVICE: Joi.string().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
@@ -43,6 +44,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     SubscribersModule,
     CommentsModule,
     EmailModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

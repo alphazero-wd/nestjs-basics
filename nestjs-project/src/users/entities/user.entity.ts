@@ -7,6 +7,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Message } from '../../chat/entities/message.entity';
 import { Comment } from '../../comments/entities/comment.entity';
 import { Post } from '../../posts/entities/post.entity';
 import { Address } from './address.entity';
@@ -47,4 +48,9 @@ export class User {
     onDelete: 'CASCADE',
   })
   comments?: Comment[];
+
+  @OneToMany(() => Message, (message: Message) => message.author, {
+    onDelete: 'CASCADE',
+  })
+  messages?: Message[];
 }
