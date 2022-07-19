@@ -1,12 +1,11 @@
-import * as cluster from 'node:cluster';
-import * as os from 'node:os';
+import cluster from 'cluster';
+import os from 'os';
 
 export const runInCluster = (bootstrap: () => Promise<void>) => {
-  console.log(os.cpus());
-  const numberOfCores = 1;
-  if (cluster.default.isPrimary) {
+  const numberOfCores = os?.cpus()?.length || 1;
+  if (cluster?.isPrimary) {
     for (let i = 0; i < numberOfCores; i++) {
-      cluster.default.fork();
+      cluster?.fork();
     }
   } else bootstrap();
 };
