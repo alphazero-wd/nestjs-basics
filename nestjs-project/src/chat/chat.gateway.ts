@@ -30,7 +30,7 @@ export class ChatGateway {
     return message;
   }
 
-  @SubscribeMessage('request-all-message')
+  @SubscribeMessage('request-all-messages')
   async requestAllMessages(@ConnectedSocket() socket: Socket) {
     await this.chatService.getUserFromSocket(socket);
     const messages = await this.chatService.getMessages();
