@@ -47,7 +47,12 @@ export class PostsService {
 
   @CacheKey(GET_POSTS_CACHE_KEY)
   @CacheTTL(120)
-  async findAll(limit?: number, offset?: number, startId?: number) {
+  async findAll(
+    limit?: number,
+    offset?: number,
+    startId?: number,
+    options?: FindManyOptions<Post>,
+  ) {
     // return posts and authors
     const where: FindManyOptions<Post>['where'] = {};
     let separateCount = 0;
@@ -60,9 +65,14 @@ export class PostsService {
       order: { id: 'ASC' },
       skip: offset,
       take: limit,
+      ...options,
     });
 
     return { items, count: startId ? separateCount : count };
+  }
+
+  async findPostsWithAuthor(limit?: number, offset?: number, startId?: number) {
+    return this.findAll(limit, offset, startId, { relations: ['author'] });
   }
 
   async findOne(id: number) {

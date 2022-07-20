@@ -1,3 +1,4 @@
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import {
   Column,
@@ -12,14 +13,18 @@ import { Comment } from '../../comments/entities/comment.entity';
 import { Post } from '../../posts/entities/post.entity';
 import { Address } from './address.entity';
 
+@ObjectType()
 @Entity()
 export class User {
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
   @Column({ unique: true })
   email: string;
 
+  @Field()
   @Column()
   name: string;
 
