@@ -7,6 +7,7 @@ import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { SearchModule } from '../search/search.module';
 import PostsSearchService from './posts-search.service';
+import { PostsResolver } from './posts.resolver';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import PostsSearchService from './posts-search.service';
     SearchModule,
   ],
   controllers: [PostsController],
-  providers: [PostsService, PostsSearchService],
+  providers: [PostsService, PostsSearchService, PostsResolver],
 })
 export class PostsModule {}

@@ -1,21 +1,28 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { PostsModule } from './posts/posts.module';
 import * as Joi from '@hapi/joi';
-import { DatabaseModule } from './database/database.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { CategoriesModule } from './categories/categories.module';
-import { SubscribersModule } from './subscribers/subscribers.module';
-import { CommentsModule } from './comments/comments.module';
-import { EmailModule } from './email/email.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AppResolver } from './app.resolver';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
 import { ChatModule } from './chat/chat.module';
+import { CommentsModule } from './comments/comments.module';
+import { DatabaseModule } from './database/database.module';
+import { EmailModule } from './email/email.module';
+import { PostsModule } from './posts/posts.module';
 import { SearchModule } from './search/search.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      playground: true,
+      autoSchemaFile: true,
+    }),
     ScheduleModule.forRoot(),
     PostsModule,
     ConfigModule.forRoot({
@@ -51,7 +58,6 @@ import { SearchModule } from './search/search.module';
     ChatModule,
     SearchModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppResolver],
 })
 export class AppModule {}
