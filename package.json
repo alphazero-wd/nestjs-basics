@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^8.2.1",
+    "@elastic/elasticsearch": "7.9.0",
     "@grpc/grpc-js": "^1.6.7",
     "@grpc/proto-loader": "^0.7.0",
     "@hapi/joi": "^17.1.1",
@@ -29,7 +29,7 @@
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/cqrs": "^9.0.1",
-    "@nestjs/elasticsearch": "^9.0.0",
+    "@nestjs/elasticsearch": "7.1.0",
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/microservices": "^9.0.3",

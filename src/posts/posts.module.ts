@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
+import { SearchModule } from '../search/search.module';
+import PostsSearchService from './posts-search.service';
 
 @Module({
   imports: [
@@ -18,8 +20,9 @@ import { PostsService } from './posts.service';
         ttl: 120,
       }),
     }),
+    SearchModule,
   ],
   controllers: [PostsController],
-  providers: [PostsService],
+  providers: [PostsService, PostsSearchService],
 })
 export class PostsModule {}

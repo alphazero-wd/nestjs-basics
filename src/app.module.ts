@@ -13,6 +13,7 @@ import { CommentsModule } from './comments/comments.module';
 import { EmailModule } from './email/email.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ChatModule } from './chat/chat.module';
+import { SearchModule } from './search/search.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -35,9 +36,9 @@ import { ChatModule } from './chat/chat.module';
         EMAIL_SERVICE: Joi.string().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
-        ELASTIC_HOST: Joi.string().required(),
-        ELASTIC_USERNAME: Joi.string().required(),
-        ELASTIC_PASSWORD: Joi.string().required(),
+        ELASTICSEARCH_NODE: Joi.string().required(),
+        ELASTICSEARCH_USERNAME: Joi.string().required(),
+        ELASTICSEARCH_PASSWORD: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -48,6 +49,7 @@ import { ChatModule } from './chat/chat.module';
     CommentsModule,
     EmailModule,
     ChatModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
