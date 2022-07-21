@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { WsException } from '@nestjs/websockets';
 import { parse } from 'cookie';
 import { Socket } from 'socket.io';
@@ -11,7 +12,7 @@ import { Message } from './entities/message.entity';
 export class ChatService {
   constructor(
     private authService: AuthService,
-    private messagesRepository: Repository<Message>,
+    @InjectRepository(Message) private messagesRepository: Repository<Message>,
   ) {}
 
   async getUserFromSocket(socket: Socket) {

@@ -36,7 +36,8 @@ export class PostsController {
     @Query('search') search: string,
     @Query() { offset, limit, startId }: PaginationParams,
   ) {
-    if (search) return this.postsService.searchPosts(search);
+    if (search)
+      return this.postsService.searchPosts(search, offset, limit, startId);
     return this.postsService.findAll(limit, offset, startId);
   }
 

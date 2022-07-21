@@ -13,3 +13,7 @@ export interface PostSearchResult {
     }>;
   };
 }
+
+export interface PostCountResult {
+  count: number;
+}

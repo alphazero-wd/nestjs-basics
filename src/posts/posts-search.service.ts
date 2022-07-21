@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Post } from './entities/post.entity';
 import {
+  PostCountResult,
   PostSearchBody,
   PostSearchResult,
 } from './interfaces/posts-search.interface';
@@ -23,21 +24,48 @@ export default class PostsSearchService {
       },
     });
   }
-
-  async search(search: string) {
-    const { body } = await this.elasticsearchService.search<PostSearchResult>({
+  async count(query: string, fields: string[]) {
+    const { body } = await this.elasticsearchService.count<PostCountResult>({
       index: this.index,
       body: {
         query: {
           multi_match: {
-            query: search,
-            fields: ['title', 'paragraphs'],
+            query,
+            fields,
           },
         },
       },
     });
+    return body.count;
+  }
+
+  async search(search: string, offset?: number, limit?: number, startId = 0) {
+    let separateCount = 0;
+    if (startId) {
+      separateCount = await this.count(search, ['title', 'paragraphs']);
+    }
+    const { body } = await this.elasticsearchService.search<PostSearchResult>({
+      index: this.index,
+      from: offset,
+      size: limit,
+      body: {
+        query: {
+          bool: {
+            filter: { range: { id: { gt: startId } } },
+            must: {
+              multi_match: { query: search, fields: ['title', 'paragraphs'] },
+            },
+          },
+        },
+        sort: { id: { order: 'asc' } },
+      },
+    });
+    const count = body.hits.total;
     const hits = body.hits.hits;
-    return hits.map((item) => item._source);
+    return {
+      count: startId ? separateCount : count,
+      results: hits.map((item) => item._source),
+    };
   }
 
   async update(post: Post) {

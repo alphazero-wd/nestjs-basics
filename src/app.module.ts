@@ -16,12 +16,14 @@ import { PostsModule } from './posts/posts.module';
 import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
+import { PubsubModule } from './pubsub/pubsub.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,
       autoSchemaFile: true,
+      installSubscriptionHandlers: true,
     }),
     ScheduleModule.forRoot(),
     PostsModule,

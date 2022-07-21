@@ -7,11 +7,11 @@ import {
   Injectable,
   UseInterceptors,
 } from '@nestjs/common';
-import { Cache } from 'cache-manager';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, MoreThan, Repository, In } from 'typeorm';
+import { Cache } from 'cache-manager';
+import { FindManyOptions, In, MoreThan, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
-import { GET_POSTS_CACHE_KEY } from './constants/posts-cache-key.constant';
+import { GET_POSTS_CACHE_KEY } from './constants';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { Post } from './entities/post.entity';
 import { PostNotFoundException } from './exceptions/post-not-found.exception';
@@ -21,8 +21,7 @@ import PostsSearchService from './posts-search.service';
 @UseInterceptors(ClassSerializerInterceptor)
 export class PostsService {
   constructor(
-    @InjectRepository(Post)
-    private postsRepository: Repository<Post>,
+    @InjectRepository(Post) private postsRepository: Repository<Post>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private postsSearchService: PostsSearchService,
   ) {}
@@ -61,6 +60,7 @@ export class PostsService {
       separateCount = await this.postsRepository.count();
     }
     const [items, count] = await this.postsRepository.findAndCount({
+      where,
       relations: ['author'],
       order: { id: 'ASC' },
       skip: offset,
@@ -105,8 +105,18 @@ export class PostsService {
     await this.postsSearchService.remove(id);
   }
 
-  async searchPosts(search: string) {
-    const results = await this.postsSearchService.search(search);
+  async searchPosts(
+    search: string,
+    limit?: number,
+    offset?: number,
+    startId?: number,
+  ) {
+    const { results } = await this.postsSearchService.search(
+      search,
+      offset,
+      limit,
+      startId,
+    );
     const ids = results.map((res) => res.id);
     if (!ids.length) {
       return [];
