@@ -3,12 +3,10 @@ import { CacheModule, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { SearchModule } from '../search/search.module';
 import PostsSearchService from './posts-search.service';
 import { PostsResolver } from './posts.resolver';
-import { PubsubModule } from '../pubsub/pubsub.module';
 
 @Module({
   imports: [
@@ -23,9 +21,7 @@ import { PubsubModule } from '../pubsub/pubsub.module';
       }),
     }),
     SearchModule,
-    PubsubModule,
   ],
-  controllers: [PostsController],
   providers: [PostsService, PostsSearchService, PostsResolver],
 })
 export class PostsModule {}

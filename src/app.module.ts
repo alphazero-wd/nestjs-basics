@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
+import * as path from 'path';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -16,13 +17,14 @@ import { PostsModule } from './posts/posts.module';
 import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
-import { PubsubModule } from './pubsub/pubsub.module';
+import { PubSubModule } from './pubsub/pubsub.module';
+
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,
-      autoSchemaFile: true,
+      autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
       installSubscriptionHandlers: true,
     }),
     ScheduleModule.forRoot(),
@@ -59,6 +61,7 @@ import { PubsubModule } from './pubsub/pubsub.module';
     EmailModule,
     ChatModule,
     SearchModule,
+    PubSubModule,
   ],
   providers: [AppService, AppResolver],
 })

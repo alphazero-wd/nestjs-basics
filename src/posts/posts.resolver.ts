@@ -8,11 +8,6 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { GraphqlJwtAuthGuard } from '../auth/guards';
-import { RequestWithUser } from '../auth/interfaces';
-import { CreatePostInput } from './inputs/create-post.input';
-import { Post } from './entities/post.entity';
-import { PostsService } from './posts.service';
 import { GraphQLResolveInfo } from 'graphql';
 import {
   parseResolveInfo,
@@ -20,19 +15,24 @@ import {
   simplifyParsedResolveInfoFragmentWithType,
 } from 'graphql-parse-resolve-info';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { GraphqlJwtAuthGuard } from '../auth/guards';
+import { RequestWithUser } from '../auth/interfaces';
+import { PUB_SUB } from '../pubsub/constants';
 import { POST_ADDED_EVENT } from './constants';
-import { PUB_SUB } from '../pubsub/pubsub.module';
+import { Post } from './entities/post.entity';
+import { CreatePostInput } from './inputs/create-post.input';
+import { PostsService } from './posts.service';
 
 @Resolver(() => Post)
 export class PostsResolver {
   constructor(
     private postsService: PostsService,
-    @Inject(PUB_SUB) private pubsub: RedisPubSub,
+    @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {}
 
   @Subscription(() => Post)
   postAdded() {
-    return this.pubsub.asyncIterator(POST_ADDED_EVENT);
+    return this.pubSub.asyncIterator(POST_ADDED_EVENT);
   }
 
   // join poses a problem: we have to fetch both posts and author even if the client does not request it
@@ -62,7 +62,7 @@ export class PostsResolver {
       createPostInput,
       context.req.user,
     );
-    await this.pubsub.publish(POST_ADDED_EVENT, { postAdded: newPost });
+    this.pubSub.publish(POST_ADDED_EVENT, { postAdded: newPost });
     return newPost;
   }
 }
