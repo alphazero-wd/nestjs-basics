@@ -56,4 +56,14 @@ export class UsersService {
       { currentHashedRefreshToken: null },
     );
   }
+
+  async enableTwoFactorAuth(userId: number) {
+    return this.usersRepository.update(userId, {
+      isTwoFactorAuthEnabled: true,
+    });
+  }
+
+  async setTwoFactorAuthSecret(secret: string, userId: number) {
+    return this.usersRepository.update(userId, { twoFactorAuthSecret: secret });
+  }
 }

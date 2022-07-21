@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinTable,
@@ -7,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Category } from '../../categories/entities/category.entity';
@@ -34,6 +36,14 @@ export class Post {
   @Field(() => [String!]!)
   @Column('text', { array: true })
   paragraphs: string[];
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToMany(() => Category, (category: Category) => category.posts)
   @JoinTable()

@@ -49,6 +49,12 @@ export class User {
   @OneToMany(() => Post, (post: Post) => post.author, { onDelete: 'CASCADE' })
   posts?: Post[];
 
+  @Column({ nullable: true })
+  public twoFactorAuthSecret?: string;
+
+  @Column({ default: false })
+  public isTwoFactorAuthEnabled: boolean;
+
   @OneToMany(() => Comment, (comment: Comment) => comment.id, {
     onDelete: 'CASCADE',
   })

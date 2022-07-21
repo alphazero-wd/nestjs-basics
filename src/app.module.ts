@@ -18,6 +18,7 @@ import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
 import { PubSubModule } from './pubsub/pubsub.module';
+import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { PubSubModule } from './pubsub/pubsub.module';
     ChatModule,
     SearchModule,
     PubSubModule,
+    TwoFactorAuthModule,
   ],
   providers: [AppService, AppResolver],
 })

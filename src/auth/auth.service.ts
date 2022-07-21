@@ -60,8 +60,8 @@ export class AuthService {
       );
   }
 
-  getCookieWithAccessToken(sub: number) {
-    const payload: TokenPayload = { sub };
+  getCookieWithAccessToken(sub: number, isSecondFactorAuthenticated = false) {
+    const payload: TokenPayload = { sub, isSecondFactorAuthenticated };
     const expiresIn = this.configService.get('JWT_ACCESS_EXPIRATION_TIME');
     const secret = this.configService.get('JWT_ACCESS_SECRET');
     const token = this.jwtService.sign(payload, {

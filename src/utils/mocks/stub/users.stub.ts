@@ -12,4 +12,5 @@ export const mockedUser: User = {
     country: 'countryName',
   },
   posts: [],
+  isTwoFactorAuthEnabled: false,
 };
