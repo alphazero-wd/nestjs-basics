@@ -11,6 +11,7 @@ export const mockedUser: User = {
     city: 'cityName',
     country: 'countryName',
   },
+  stripeCustomerId: 'customer_id',
   posts: [],
   isTwoFactorAuthEnabled: false,
 };

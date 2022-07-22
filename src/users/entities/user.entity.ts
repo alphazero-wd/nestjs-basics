@@ -46,6 +46,12 @@ export class User {
   @JoinColumn()
   address?: Address;
 
+  @Column()
+  public stripeCustomerId: string;
+
+  @Column({ nullable: true })
+  public monthlySubscriptionStatus?: string;
+
   @OneToMany(() => Post, (post: Post) => post.author, { onDelete: 'CASCADE' })
   posts?: Post[];
 

@@ -19,6 +19,10 @@ import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
 import { PubSubModule } from './pubsub/pubsub.module';
 import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module';
+import { StripeModule } from './stripe/stripe.module';
+import { CreditCardsModule } from './credit-cards/credit-cards.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
 
 @Module({
   imports: [
@@ -51,6 +55,11 @@ import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module';
         ELASTICSEARCH_NODE: Joi.string().required(),
         ELASTICSEARCH_USERNAME: Joi.string().required(),
         ELASTICSEARCH_PASSWORD: Joi.string().required(),
+        STRIPE_SECRET_KEY: Joi.string().required(),
+        STRIPE_CURRENCY: Joi.string().required(),
+        FRONTEND_URL: Joi.string().required(),
+        MONTHLY_SUBSCRIPTION_PRICE_ID: Joi.string().required(),
+        STRIPE_WEBHOOK_SECRET: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -64,6 +73,10 @@ import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module';
     SearchModule,
     PubSubModule,
     TwoFactorAuthModule,
+    StripeModule,
+    CreditCardsModule,
+    SubscriptionsModule,
+    StripeWebhookModule,
   ],
   providers: [AppService, AppResolver],
 })

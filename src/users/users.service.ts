@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
+import Stripe from 'stripe';
 import { Repository } from 'typeorm';
+import { StripeService } from '../stripe/stripe.service';
 import { CreateUserDto } from './dto';
 import { User } from './entities/user.entity';
 
@@ -9,6 +11,7 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
+    private stripeService: StripeService,
   ) {}
 
   async getByEmail(email: string) {
@@ -20,7 +23,14 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
-    const newUser = this.usersRepository.create(createUserDto);
+    const stripeCustomer = await this.stripeService.createCustomer(
+      createUserDto.name,
+      createUserDto.email,
+    );
+    const newUser = this.usersRepository.create({
+      ...createUserDto,
+      stripeCustomerId: stripeCustomer.id,
+    });
     await this.usersRepository.save(newUser);
     return newUser;
   }
@@ -65,5 +75,17 @@ export class UsersService {
 
   async setTwoFactorAuthSecret(secret: string, userId: number) {
     return this.usersRepository.update(userId, { twoFactorAuthSecret: secret });
+  }
+
+  async updateMonthlySubscriptionStatus(
+    customerId: string,
+    subscriptionStatus: string,
+  ) {
+    return this.usersRepository.update(
+      {
+        stripeCustomerId: customerId,
+      },
+      { monthlySubscriptionStatus: subscriptionStatus },
+    );
   }
 }
