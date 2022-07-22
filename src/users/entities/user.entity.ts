@@ -52,6 +52,9 @@ export class User {
   @Column({ nullable: true })
   public monthlySubscriptionStatus?: string;
 
+  @Column({ default: false })
+  public isEmailConfirmed: boolean;
+
   @OneToMany(() => Post, (post: Post) => post.author, { onDelete: 'CASCADE' })
   posts?: Post[];
 

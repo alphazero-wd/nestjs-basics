@@ -13,11 +13,11 @@ export class EmailSchedulingService {
 
   scheduleEmail({ date, recipient, content, subject }: EmailScheduleDto) {
     const sendDate = new Date(date);
-    const job = new CronJob(date, () => {
+    const job = new CronJob(sendDate, () => {
       this.emailService.sendEmail({
         to: recipient,
         subject,
-        text: content,
+        html: content,
       });
     });
     this.scheduleRegistry.addCronJob(`${Date.now()}-${subject}`, job);

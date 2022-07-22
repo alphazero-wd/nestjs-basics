@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { EmailConfirmationService } from '../email-confirmation/email-confirmation.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
@@ -19,13 +20,16 @@ import { RequestWithUser } from './interfaces/request.interface';
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(
-    private authService: AuthService,
-    private usersService: UsersService,
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+    private readonly emailConfirmationService: EmailConfirmationService,
   ) {}
 
   @Post('register')
   async register(@Body() registerDto: CreateUserDto) {
-    return this.authService.register(registerDto);
+    const user = await this.authService.register(registerDto);
+    await this.emailConfirmationService.sendVerificationLink(user.email);
+    return user;
   }
 
   @HttpCode(200)

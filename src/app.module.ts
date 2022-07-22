@@ -23,6 +23,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { CreditCardsModule } from './credit-cards/credit-cards.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
+import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
         FRONTEND_URL: Joi.string().required(),
         MONTHLY_SUBSCRIPTION_PRICE_ID: Joi.string().required(),
         STRIPE_WEBHOOK_SECRET: Joi.string().required(),
+        EMAIL_CONFIRMATION_URL: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -77,6 +79,7 @@ import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
     CreditCardsModule,
     SubscriptionsModule,
     StripeWebhookModule,
+    EmailConfirmationModule,
   ],
   providers: [AppService, AppResolver],
 })
