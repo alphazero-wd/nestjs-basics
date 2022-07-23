@@ -24,6 +24,7 @@ import { CreditCardsModule } from './credit-cards/credit-cards.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -62,6 +63,10 @@ import { EmailConfirmationModule } from './email-confirmation/email-confirmation
         MONTHLY_SUBSCRIPTION_PRICE_ID: Joi.string().required(),
         STRIPE_WEBHOOK_SECRET: Joi.string().required(),
         EMAIL_CONFIRMATION_URL: Joi.string().required(),
+        TWILIO_VERIFICATION_SERVICE_SID: Joi.string().required(),
+        TWILIO_AUTH_TOKEN: Joi.string().required(),
+        TWILIO_ACCOUNT_SID: Joi.string().required(),
+        TWILIO_SENDER_PHONE_NUMBER: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -80,6 +85,7 @@ import { EmailConfirmationModule } from './email-confirmation/email-confirmation
     SubscriptionsModule,
     StripeWebhookModule,
     EmailConfirmationModule,
+    SmsModule,
   ],
   providers: [AppService, AppResolver],
 })

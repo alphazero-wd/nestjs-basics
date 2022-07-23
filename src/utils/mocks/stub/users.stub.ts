@@ -15,4 +15,6 @@ export const mockedUser: User = {
   isEmailConfirmed: false,
   posts: [],
   isTwoFactorAuthEnabled: false,
+  phoneNumber: '+1234567890',
+  isPhoneNumberConfirmed: false,
 };

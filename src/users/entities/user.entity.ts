@@ -55,6 +55,12 @@ export class User {
   @Column({ default: false })
   public isEmailConfirmed: boolean;
 
+  @Column()
+  public phoneNumber: string;
+
+  @Column({ default: false })
+  public isPhoneNumberConfirmed: boolean;
+
   @OneToMany(() => Post, (post: Post) => post.author, { onDelete: 'CASCADE' })
   posts?: Post[];
 

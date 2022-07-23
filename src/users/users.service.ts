@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
-import Stripe from 'stripe';
 import { Repository } from 'typeorm';
 import { StripeService } from '../stripe/stripe.service';
 import { CreateUserDto } from './dto';
@@ -90,6 +89,12 @@ export class UsersService {
   }
 
   async markEmailAsConfirmed(email: string) {
-    await this.usersRepository.update({ email }, { isEmailConfirmed: true });
+    return this.usersRepository.update({ email }, { isEmailConfirmed: true });
+  }
+
+  async markPhoneNumberAsConfirmed(userId: number) {
+    return this.usersRepository.update(userId, {
+      isPhoneNumberConfirmed: true,
+    });
   }
 }

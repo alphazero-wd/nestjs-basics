@@ -66,6 +66,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "stripe": "^9.14.0",
+    "twilio": "^3.80.0",
     "typeorm": "^0.3.7"
   },
   "devDependencies": {
