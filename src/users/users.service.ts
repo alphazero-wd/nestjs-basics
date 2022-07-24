@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
@@ -96,5 +97,19 @@ export class UsersService {
     return this.usersRepository.update(userId, {
       isPhoneNumberConfirmed: true,
     });
+  }
+
+  async createWithGoogle(email: string, name: string) {
+    const stripeCustomer = await this.stripeService.createCustomer(name, email);
+    const randomHash = await hash(crypto.randomBytes(32).toString('hex'), 12);
+    const newUser = this.usersRepository.create({
+      email,
+      name,
+      isRegisteredWithGoogle: true,
+      password: randomHash,
+      stripeCustomerId: stripeCustomer.id,
+    });
+    await this.usersRepository.save(newUser);
+    return newUser;
   }
 }

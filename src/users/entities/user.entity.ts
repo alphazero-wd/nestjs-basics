@@ -47,28 +47,31 @@ export class User {
   address?: Address;
 
   @Column()
-  public stripeCustomerId: string;
+  stripeCustomerId: string;
 
   @Column({ nullable: true })
-  public monthlySubscriptionStatus?: string;
+  monthlySubscriptionStatus?: string;
 
   @Column({ default: false })
-  public isEmailConfirmed: boolean;
+  isEmailConfirmed: boolean;
 
-  @Column()
-  public phoneNumber: string;
+  @Column({ nullable: true })
+  phoneNumber?: string;
 
   @Column({ default: false })
-  public isPhoneNumberConfirmed: boolean;
+  isPhoneNumberConfirmed: boolean;
 
   @OneToMany(() => Post, (post: Post) => post.author, { onDelete: 'CASCADE' })
   posts?: Post[];
 
   @Column({ nullable: true })
-  public twoFactorAuthSecret?: string;
+  twoFactorAuthSecret?: string;
 
   @Column({ default: false })
-  public isTwoFactorAuthEnabled: boolean;
+  isTwoFactorAuthEnabled: boolean;
+
+  @Column({ default: false })
+  isRegisteredWithGoogle: boolean;
 
   @OneToMany(() => Comment, (comment: Comment) => comment.id, {
     onDelete: 'CASCADE',

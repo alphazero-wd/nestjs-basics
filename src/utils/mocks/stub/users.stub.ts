@@ -17,4 +17,5 @@ export const mockedUser: User = {
   isTwoFactorAuthEnabled: false,
   phoneNumber: '+1234567890',
   isPhoneNumberConfirmed: false,
+  isRegisteredWithGoogle: false,
 };

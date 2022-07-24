@@ -25,6 +25,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
 import { SmsModule } from './sms/sms.module';
+import { GoogleAuthModule } from './google-auth/google-auth.module';
 
 @Module({
   imports: [
@@ -67,6 +68,8 @@ import { SmsModule } from './sms/sms.module';
         TWILIO_AUTH_TOKEN: Joi.string().required(),
         TWILIO_ACCOUNT_SID: Joi.string().required(),
         TWILIO_SENDER_PHONE_NUMBER: Joi.string().required(),
+        GOOGLE_AUTH_CLIENT_ID: Joi.string().required(),
+        GOOGLE_AUTH_CLIENT_SECRET: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -86,6 +89,7 @@ import { SmsModule } from './sms/sms.module';
     StripeWebhookModule,
     EmailConfirmationModule,
     SmsModule,
+    GoogleAuthModule,
   ],
   providers: [AppService, AppResolver],
 })
