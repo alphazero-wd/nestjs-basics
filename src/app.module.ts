@@ -69,6 +69,7 @@ import { FilesModule } from './files/files.module';
         TWILIO_AUTH_TOKEN: Joi.string().required(),
         TWILIO_ACCOUNT_SID: Joi.string().required(),
         TWILIO_SENDER_PHONE_NUMBER: Joi.string().required(),
+        UPLOADED_FILES_DESTINATION: Joi.string().required(),
       }),
     }),
     DatabaseModule,

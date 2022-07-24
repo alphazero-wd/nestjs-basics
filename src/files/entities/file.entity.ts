@@ -8,6 +8,9 @@ export class File {
   @Column()
   filename: string;
 
-  @Column('bytea')
-  data: Uint8Array;
+  @Column()
+  path: string;
+
+  @Column()
+  mimetype: string;
 }

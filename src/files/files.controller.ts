@@ -9,7 +9,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { Readable } from 'stream';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 import { FilesService } from './files.service';
 
 @Controller('files')
@@ -24,7 +25,7 @@ export class FilesController {
     @Param('id', ParseIntPipe) id: number,
   ) {
     const file = await this.filesService.getFileById(id);
-    const stream = Readable.from(file.data);
+    const stream = createReadStream(join(process.cwd(), file.path));
     res.set({
       'Content-Disposition': `inline; filename="${file.filename}"`,
       'Content-Type': 'image',

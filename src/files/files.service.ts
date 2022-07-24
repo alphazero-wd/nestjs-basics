@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
+import { UploadFileDto } from './dto/upload-file.dto';
 import { File } from './entities/file.entity';
 
 @Injectable()
@@ -9,16 +10,9 @@ export class FilesService {
     @InjectRepository(File) private readonly filesRepository: Repository<File>,
   ) {}
 
-  async uploadFile(
-    dataBuffer: Buffer,
-    filename: string,
-    queryRunner: QueryRunner,
-  ) {
-    const newFile = queryRunner.manager.create(File, {
-      data: dataBuffer,
-      filename,
-    });
-    await queryRunner.manager.save(newFile);
+  async uploadFile(file: UploadFileDto) {
+    const newFile = this.filesRepository.create(file);
+    await this.filesRepository.save(newFile);
     return newFile;
   }
 

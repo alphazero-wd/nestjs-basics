@@ -12,6 +12,7 @@ import { StripeService } from '../stripe/stripe.service';
 import { CreateUserDto } from './dto';
 import { User } from './entities/user.entity';
 import { FilesService } from '../files/files.service';
+import { UploadFileDto } from '../files/dto/upload-file.dto';
 
 @Injectable()
 export class UsersService {
@@ -121,26 +122,8 @@ export class UsersService {
     return newUser;
   }
 
-  async uploadAvatar(userId: number, imageBuffer: Buffer, filename: string) {
-    const queryRunner = this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      const user = await queryRunner.manager.findOne(User, {
-        where: { id: userId },
-      });
-      const avatar = await this.filesService.uploadFile(
-        imageBuffer,
-        filename,
-        queryRunner,
-      );
-      await queryRunner.manager.update(User, userId, { avatarId: avatar.id });
-      if (user.avatar) return avatar;
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+  async uploadAvatar(userId: number, file: UploadFileDto) {
+    const avatar = await this.filesService.uploadFile(file);
+    await this.usersRepository.update(userId, { avatarId: avatar.id });
   }
 }

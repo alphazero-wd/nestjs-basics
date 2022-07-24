@@ -1,5 +1,6 @@
 import { Express } from 'express';
 import {
+  BadRequestException,
   Controller,
   Post,
   Req,
@@ -11,6 +12,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards';
 import { RequestWithUser } from '../auth/interfaces';
 import { UsersService } from './users.service';
+import { diskStorage } from 'multer';
+import { LocalFilesInterceptor } from '../files/interceptors/files.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -18,15 +21,29 @@ export class UsersController {
 
   @Post('avatar/upload')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      path: '/avatars',
+      fieldName: 'file',
+      fileFilter(_req, file, callback) {
+        if (!file.mimetype.includes('image'))
+          return callback(
+            new BadRequestException('Provide a valid image'),
+            false,
+          );
+        callback(null, true);
+      },
+      limits: { fileSize: Math.pow(1024, 2) }, // 1 mb
+    }),
+  )
   async uploadAvatar(
     @Req() req: RequestWithUser,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() { filename, mimetype, path }: Express.Multer.File,
   ) {
-    return this.usersService.uploadAvatar(
-      req.user.id,
-      file.buffer,
-      file.originalname,
-    );
+    return this.usersService.uploadAvatar(req.user.id, {
+      path,
+      filename,
+      mimetype,
+    });
   }
 }
