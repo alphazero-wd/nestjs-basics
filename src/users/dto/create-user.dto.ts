@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MinLength,
@@ -23,5 +24,6 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @Matches(/^\+[1-9]\d{1,14}$/, { message: 'Invalid phone number.' })
+  @IsOptional()
   phoneNumber: string;
 }

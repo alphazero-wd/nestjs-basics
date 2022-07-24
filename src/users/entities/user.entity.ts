@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Message } from '../../chat/entities/message.entity';
 import { Comment } from '../../comments/entities/comment.entity';
+import { File } from '../../files/entities/file.entity';
 import { Post } from '../../posts/entities/post.entity';
 import { Address } from './address.entity';
 
@@ -45,6 +46,13 @@ export class User {
   })
   @JoinColumn()
   address?: Address;
+
+  @OneToOne(() => File, { eager: true, cascade: true, onDelete: 'CASCADE' })
+  @JoinColumn()
+  avatar?: File;
+
+  @Column({ nullable: true })
+  avatarId?: number;
 
   @Column()
   stripeCustomerId: string;

@@ -1,17 +1,25 @@
 import * as crypto from 'crypto';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { StripeService } from '../stripe/stripe.service';
 import { CreateUserDto } from './dto';
 import { User } from './entities/user.entity';
+import { FilesService } from '../files/files.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
     private stripeService: StripeService,
+    private filesService: FilesService,
+    private connection: Connection,
   ) {}
 
   async getByEmail(email: string) {
@@ -111,5 +119,28 @@ export class UsersService {
     });
     await this.usersRepository.save(newUser);
     return newUser;
+  }
+
+  async uploadAvatar(userId: number, imageBuffer: Buffer, filename: string) {
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const user = await queryRunner.manager.findOne(User, {
+        where: { id: userId },
+      });
+      const avatar = await this.filesService.uploadFile(
+        imageBuffer,
+        filename,
+        queryRunner,
+      );
+      await queryRunner.manager.update(User, userId, { avatarId: avatar.id });
+      if (user.avatar) return avatar;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException();
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
